@@ -1,10 +1,22 @@
 import React from 'react'
 
 import './Product.css'
+import { useStateValue } from '../../StateProvider';
 
 import StarIcon from '@material-ui/icons/Star';
 
-function Product({ title, image, price, rating }) {
+function Product({ id, title, image, price, rating }) {
+    const [{ basket }, dispatch] = useStateValue();
+
+    const addToBasket = () => {
+        dispatch({
+            type: 'ADD_TO_BASKET',
+            item: {
+                id, title, image, price, rating
+            }
+        })
+    }
+
     return (
         <div className='product'>
             <div className='product__info'>
@@ -17,14 +29,17 @@ function Product({ title, image, price, rating }) {
 
                 <div className='product__rating'>
                     {Array(rating).fill().map((_, i) => (
-                        <StarIcon className='product__star' />
+                        <StarIcon 
+                            key={`${id}__${i}`}
+                            className='product__star' 
+                        />
                     ))}
                 </div>
             </div>
             
             <img src={image} alt={title} />
             
-            <button>add to basket</button>
+            <button onClick={() => addToBasket()}>add to basket</button>
         </div>
     )
 }
